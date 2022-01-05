@@ -36,6 +36,5 @@ fn main() {
     req_args.push(("proid", main_version.as_str()));
     req_args.push(("first_name", product_first_name.as_str()));
     let url = get_jenkins_config().get_url();
-    dbg!(&req_args);
     ureq::post(&url).send_form(&req_args).unwrap();
 }
