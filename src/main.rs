@@ -2,11 +2,13 @@ extern crate structopt;
 mod iniparser;
 mod svn;
 mod subpack;
+mod jenkins;
 use iniparser::{get_product_first_name, locate_key, read_upgrade_ini};
 use std::path::PathBuf;
 use svn::get_svn_repo_info;
 use subpack::get_sub_packages;
 use structopt::StructOpt;
+use jenkins::get_jenkins_config;
 use std::fs;
 
 #[derive(StructOpt)]
@@ -24,10 +26,16 @@ fn main() {
     let product_first_name = get_product_first_name(
         locate_key(&upgrade_info, "product").expect("Cannot get product info"),
     );
-    for pack in get_sub_packages(&repo_path) {
-        println!("package: {}", pack);
+    let mut req_args: Vec<(&str, &str)> = vec![("hyphen", "_"), ("readme", "readme")];
+    let packages = get_sub_packages(&repo_path);
+    for i in 0..packages.len() {
+        req_args.push(("upgrade_content", packages[i].as_str()));
     }
-    println!("{}", svn_repo_info);
-    println!("Period: {}", main_version);
-    println!("first_name: {}", product_first_name);
+    req_args.push(("svn_path", svn_repo_info.repourl.as_str()));
+    req_args.push(("svn_revision", svn_repo_info.revision.as_str()));
+    req_args.push(("proid", main_version.as_str()));
+    req_args.push(("first_name", product_first_name.as_str()));
+    let url = get_jenkins_config().get_url();
+    dbg!(&req_args);
+    ureq::post(&url).send_form(&req_args).unwrap();
 }

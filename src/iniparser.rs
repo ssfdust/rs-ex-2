@@ -23,13 +23,13 @@ pub fn read_upgrade_ini(repo_path: &PathBuf) -> HashMap<String, String> {
 
 pub fn get_product_first_name(product: &str) -> String {
     let product_names: HashMap<&str, &str> = HashMap::from([
-        ("LAS", "LAS:深信服LAS"),
-        ("BVT", "BVT:深信服BVT"),
-        ("BDSEC", "001:BDSEC"),
-        ("SAS", "002:SAS"),
-        ("CSV", "003:CSV"),
-        ("BDLOG", "004:BDLOG"),
-        ("NFA", "005:iNFA"),
+        ("LAS", "LAS:  深信服LAS"),
+        ("BVT", "BVT: 深信服BVT"),
+        ("BDSEC", "001: BDSEC"),
+        ("SAS", "002: SAS"),
+        ("CSV", "003: CSV"),
+        ("BDLOG", "004: BDLOG"),
+        ("NFA", "005: iNFA"),
     ]);
     product_names
         .get(&product.to_ascii_uppercase().as_str())
